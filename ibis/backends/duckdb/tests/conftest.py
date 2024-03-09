@@ -7,7 +7,7 @@ import pytest
 import ibis
 from ibis.backends.conftest import TEST_TABLES
 from ibis.backends.tests.base import BackendTest
-from ibis.conftest import SANDBOXED, WINDOWS
+from ibis.conftest import SANDBOXED
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -84,6 +84,9 @@ class TestConf(BackendTest):
         #
         # avoid enabling on linux because this adds a lot of time to parallel
         # test runs due to each worker getting its own extensions directory
+        extension_directory = tmpdir.getbasetemp().joinpath("duckdb_extensions")
+        extension_directory.mkdir(exist_ok=True)
+        kw["extension_directory"] = extension_directory
         return ibis.duckdb.connect(**kw)
 
     def load_tpch(self) -> None:
