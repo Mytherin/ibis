@@ -84,10 +84,6 @@ class TestConf(BackendTest):
         #
         # avoid enabling on linux because this adds a lot of time to parallel
         # test runs due to each worker getting its own extensions directory
-        if WINDOWS:
-            extension_directory = tmpdir.getbasetemp().joinpath("duckdb_extensions")
-            extension_directory.mkdir(exist_ok=True)
-            kw["extension_directory"] = extension_directory
         return ibis.duckdb.connect(**kw)
 
     def load_tpch(self) -> None:
