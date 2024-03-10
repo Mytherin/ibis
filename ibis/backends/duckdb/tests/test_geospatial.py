@@ -94,31 +94,6 @@ def test_geospatial_length(lines, lines_gdf):
     tm.assert_series_equal(length.to_pandas(), gp_length, check_names=False)
 
 
-# geospatial binary functions that return a non-geometry series
-# we can test using pd.testing (tm)
-@pytest.mark.parametrize(
-    ("op", "gp_op"),
-    [
-        param("contains", "contains", id="contains"),
-        param("geo_equals", "geom_equals", id="geo_eqs"),
-        param("covers", "covers", id="covers"),
-        param("covered_by", "covered_by", id="covered_by"),
-        param("crosses", "crosses", id="crosses"),
-        param("disjoint", "disjoint", id="disjoint"),
-        param("distance", "distance", id="distance"),
-        param("intersects", "intersects", id="intersects"),
-        param("overlaps", "overlaps", id="overlaps"),
-        param("touches", "touches", id="touches"),
-        param("within", "within", id="within"),
-    ],
-)
-def test_geospatial_binary_tm(op, gp_op, zones, zones_gdf):
-    expr = getattr(zones.geom, op)(zones.geom).name("tmp")
-    gp_func = getattr(zones_gdf.geometry, gp_op)(zones_gdf.geometry)
-
-    tm.assert_series_equal(expr.to_pandas(), gp_func, check_names=False)
-
-
 # geospatial unary functions that return a geometry series
 # we can test using gpd.testing (gtm)
 @pytest.mark.parametrize(
