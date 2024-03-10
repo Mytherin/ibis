@@ -79,14 +79,6 @@ class TestConf(BackendTest):
 
     @staticmethod
     def connect(*, tmpdir, worker_id, **kw) -> BaseBackend:
-        # use an extension directory per test worker to prevent simultaneous
-        # downloads on windows
-        #
-        # avoid enabling on linux because this adds a lot of time to parallel
-        # test runs due to each worker getting its own extensions directory
-        extension_directory = tmpdir.getbasetemp().joinpath("duckdb_extensions")
-        extension_directory.mkdir(exist_ok=True)
-        kw["extension_directory"] = extension_directory
         return ibis.duckdb.connect(**kw)
 
     def load_tpch(self) -> None:
