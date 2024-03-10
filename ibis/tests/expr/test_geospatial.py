@@ -11,20 +11,17 @@ def geo_table():
 
 
 def test_geospatial_unary_op_repr(geo_table):
-    return
     expr = geo_table.geo1.centroid()
     assert expr.op().name in repr(expr)
 
 
 def test_geospatial_bin_op_repr(geo_table):
-    return
     expr = geo_table.geo1.d_within(geo_table.geo2, 3.0)
     assert expr.op().name in repr(expr)
     assert "distance=" in repr(expr)
 
 
 def test_geospatial_bin_op_repr_no_kwarg(geo_table):
-    return
     expr = geo_table.geo1.distance(geo_table.geo2)
     assert expr.op().name in repr(expr)
     assert "distance=" not in repr(expr)
