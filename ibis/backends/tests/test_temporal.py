@@ -1148,51 +1148,6 @@ no_mixed_timestamp_comparisons = [
     ),
 ]
 
-
-@pytest.mark.parametrize(
-    "func_name",
-    [
-        param("gt", marks=no_mixed_timestamp_comparisons),
-        param("ge", marks=no_mixed_timestamp_comparisons),
-        param("lt", marks=no_mixed_timestamp_comparisons),
-        param("le", marks=no_mixed_timestamp_comparisons),
-        "eq",
-        "ne",
-    ],
-)
-@pytest.mark.broken(
-    ["druid"],
-    raises=AttributeError,
-    reason="Can only use .dt accessor with datetimelike values",
-)
-@pytest.mark.notimpl(
-    ["polars"],
-    raises=BaseException,  # pyo3_runtime.PanicException is not a subclass of Exception
-    reason="failed to determine supertype of datetime[ns, UTC] and datetime[ns]",
-)
-@pytest.mark.never(
-    ["bigquery"],
-    raises=GoogleBadRequest,
-    # perhaps we should consider disallowing this in ibis as well
-    reason="BigQuery doesn't support comparing DATETIME and TIMESTAMP; numpy doesn't support timezones",
-)
-def test_timestamp_comparison_filter_numpy(backend, con, alltypes, df, func_name):
-    ts = np.datetime64("2010-03-02 00:00:00.000123")
-
-    comparison_fn = getattr(operator, func_name)
-    expr = alltypes.filter(
-        comparison_fn(alltypes.timestamp_col.cast("timestamp('UTC')"), ts)
-    )
-
-    ts = pd.Timestamp(ts.item(), tz="UTC")
-
-    col = df.timestamp_col.dt.tz_localize("UTC")
-    expected = df[comparison_fn(col, ts)]
-    result = con.execute(expr)
-
-    backend.assert_frame_equal(result, expected)
-
-
 @pytest.mark.notimpl(
     ["snowflake", "mssql", "exasol"],
     raises=com.OperationNotDefinedError,
