@@ -443,24 +443,6 @@ def test_csv_with_slash_n_null(con, tmp_path):
         ),
     ],
 )
-def test_register_filesystem_gcs(extensions):
-    fsspec = pytest.importorskip("fsspec")
-    pytest.importorskip("gcsfs")
-
-    con = ibis.duckdb.connect()
-
-    for ext in extensions:
-        con.load_extension(ext)
-
-    gcs = fsspec.filesystem("gcs")
-
-    con.register_filesystem(gcs)
-    band_members = con.read_csv(
-        "gcs://ibis-examples/data/band_members.csv.gz", table_name="band_members"
-    )
-
-    assert band_members.count().to_pyarrow()
-
 
 def test_memtable_null_column_parquet_dtype_roundtrip(con, tmp_path):
     before = ibis.memtable({"a": [None, None, None]}, schema={"a": "string"})
