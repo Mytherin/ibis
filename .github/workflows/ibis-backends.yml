@@ -125,7 +125,7 @@ jobs:
       - name: update duckdb
         run: |
           poetry run pip uninstall duckdb -y
-          poetry run pip install duckdb --pre --upgrade
+          poetry run pip install duckdb
 
       - name: show installed deps
         run: poetry run pip list
