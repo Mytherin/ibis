@@ -123,7 +123,9 @@ jobs:
         run: poetry run pip install ${{ join(matrix.backend.additional_deps, ' ') }}
 
       - name: update duckdb
-        run: pip install duckdb --pre --upgrade
+        run: |
+          pip uninstall duckdb
+          pip install duckdb==0.9.2
 
       - name: show installed deps
         run: poetry run pip list
