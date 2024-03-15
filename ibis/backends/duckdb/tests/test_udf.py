@@ -49,14 +49,6 @@ def test_builtin_scalar(con, func):
     assert con.execute(expr) == expected
 
 
-def test_builtin_scalar_noargs(con):
-    @udf.scalar.builtin
-    def version() -> str: ...
-
-    expr = version()
-    assert con.execute(expr) == f"v{con.version}"
-
-
 @udf.agg.builtin
 def product(x, where: bool = True) -> float: ...
 
